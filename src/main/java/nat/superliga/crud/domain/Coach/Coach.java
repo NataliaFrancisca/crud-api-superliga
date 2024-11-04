@@ -17,7 +17,7 @@ public class Coach {
     private String name;
     private String nationality;
 
-    public Coach(CoachRequest requestCoach){
+    public Coach(RequestCoach requestCoach){
         this.name = requestCoach.name();
         this.nationality = requestCoach.nationality();
     }
