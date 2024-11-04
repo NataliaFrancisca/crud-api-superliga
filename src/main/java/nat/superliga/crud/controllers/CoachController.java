@@ -24,6 +24,18 @@ public class CoachController {
         return ResponseEntity.ok(allCoaches);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getCoach(@PathVariable String id){
+        Optional<Coach> optionalCoach = repository.findById(id);
+
+        if(optionalCoach.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        Coach coach = optionalCoach.get();
+        return ResponseEntity.ok(coach);
+    }
+
     @PostMapping
     public ResponseEntity registerCoach(@RequestBody @Valid RequestCoach data){
         Coach newCoach = new Coach(data);
