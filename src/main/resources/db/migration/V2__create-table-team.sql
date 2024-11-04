@@ -1,0 +1,9 @@
+CREATE TABLE Team (
+    id TEXT PRIMARY KEY UNIQUE NOT NULL,
+    name TEXT NOT NULL,
+    coach_id TEXT NOT NULL,
+    state TEXT NOT NULL,
+
+    FOREIGN KEY (coach_id) REFERENCES coach (id)
+    ON DELETE CASCADE ON UPDATE CASCADE
+);
