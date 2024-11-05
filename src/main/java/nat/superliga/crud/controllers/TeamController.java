@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 
 @RestController
@@ -47,5 +46,18 @@ public class TeamController {
         team.setCoach_id(data.coach_id());
 
         return ResponseEntity.ok("Team updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteCoach(@PathVariable String id){
+        Optional<Team> optionalTeam = repository.findById(id);
+
+        if(optionalTeam.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        repository.delete(optionalTeam.get());
+        return ResponseEntity.ok("Team deleted successfully");
     }
 }
