@@ -1,0 +1,1 @@
+ALTER TABLE athlete ADD COLUMN position TEXT NOT NULL;
