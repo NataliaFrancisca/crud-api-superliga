@@ -1,5 +1,6 @@
 package nat.superliga.crud.domain.Team;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import nat.superliga.crud.domain.Athlete.Athlete;
@@ -22,6 +23,7 @@ public class Team {
     private String state;
 
     @OneToMany(mappedBy = "team")
+    @JsonManagedReference
     private List<Athlete> atheletes;
 
     public Team(RequestTeam requestTeam){
