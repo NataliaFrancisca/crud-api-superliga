@@ -24,6 +24,17 @@ public class TeamController {
         return ResponseEntity.ok(allTeams);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getTeam(@PathVariable String id){
+        Optional<Team> optionalTeam = repository.findById(id);
+
+        if(optionalTeam.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        return ResponseEntity.ok(optionalTeam.get());
+    }
+
     @PostMapping
     public ResponseEntity registerTeam(@RequestBody @Valid RequestTeam data){
         Team newTeam = new Team(data);
