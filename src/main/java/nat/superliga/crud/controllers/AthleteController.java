@@ -33,6 +33,18 @@ public class AthleteController {
         return ResponseEntity.ok(athleteDTOS);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity getAthlete(@PathVariable String id){
+        Optional<Athlete> optionalAthlete = repository.findById(id);
+
+        if(optionalAthlete.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        Optional<AthleteDTO> athleteDTO = optionalAthlete.map(AthleteConverter::convertToDTO);
+        return ResponseEntity.ok(athleteDTO);
+    }
+
     @PostMapping
     public ResponseEntity setAthlete(@RequestBody @Valid RequestAthlete data){
         var team = getAthleteTeam(data.team_id());
@@ -53,8 +65,6 @@ public class AthleteController {
 
         Athlete athlete = athleteOptional.get();
 
-        System.out.println(athlete);
-
         athlete.setName(data.name());
         athlete.setBirthdate(data.birthdate());
         athlete.setPosition(data.position());
@@ -70,5 +80,18 @@ public class AthleteController {
         }
 
         return ResponseEntity.ok("Athlete updated successfully");
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity deleteAthlete(@PathVariable String id){
+        Optional<Athlete> athleteOptional = repository.findById(id);
+
+        if(athleteOptional.isEmpty()){
+            throw new EntityNotFoundException();
+        }
+
+        repository.delete(athleteOptional.get());
+        return ResponseEntity.ok("Athlete deleted successfully");
     }
 }
