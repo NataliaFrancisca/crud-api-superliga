@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import nat.superliga.crud.domain.Athlete.Athlete;
+import nat.superliga.crud.domain.Coach.Coach;
 
 import java.util.List;
 
@@ -26,9 +27,14 @@ public class Team {
     @JsonManagedReference
     private List<Athlete> atheletes;
 
-    public Team(RequestTeam requestTeam){
+    @OneToOne
+    @JoinColumn(name = "coach_id", insertable=false, updatable=false)
+    private Coach coach;
+
+    public Team(RequestTeam requestTeam, Coach coach){
         this.name = requestTeam.name();
         this.coach_id = requestTeam.coach_id();
         this.state = requestTeam.state();
+        this.coach = coach;
     }
 }
