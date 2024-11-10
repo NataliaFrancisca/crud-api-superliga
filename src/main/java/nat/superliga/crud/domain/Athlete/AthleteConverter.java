@@ -10,11 +10,11 @@ public class AthleteConverter {
         dto.setHeight(athlete.getHeight());
         dto.setPosition(athlete.getPosition());
         dto.setNationality(athlete.getNationality());
+        dto.setPhoto(athlete.getPhoto());
 
         if (athlete.getTeam() != null) {
             dto.setTeamId(athlete.getTeam().getId());  // Atribui o ID do time ao DTO
         }
-
 
         return dto;
     }

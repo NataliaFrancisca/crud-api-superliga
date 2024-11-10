@@ -15,4 +15,5 @@ public class AthleteDTO {
     private LocalDate birthdate;
     private String nationality;
     private String teamId;
+    private String photo;
 }

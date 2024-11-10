@@ -13,5 +13,6 @@ public record RequestAthlete (
         @Positive Double height,
         @NotNull LocalDate birthdate,
         @NotBlank String nationality,
-        @NotBlank String team_id
+        @NotBlank String team_id,
+        @NotBlank String photo
 ){}
