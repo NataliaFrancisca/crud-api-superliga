@@ -2,13 +2,17 @@ package nat.superliga.crud.controllers;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import nat.superliga.crud.domain.Team.RequestTeam;
-import nat.superliga.crud.domain.Team.Team;
-import nat.superliga.crud.domain.Team.TeamRepository;
+import nat.superliga.crud.domain.Coach.Coach;
+import nat.superliga.crud.domain.Coach.CoachRepository;
+import nat.superliga.crud.domain.DTO.TeamSummaryDTO;
+import nat.superliga.crud.domain.Team.*;
+import nat.superliga.crud.domain.DTO.TeamDetailsDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -17,27 +21,34 @@ public class TeamController {
 
     @Autowired
     private TeamRepository repository;
+    @Autowired
+    private CoachRepository coachRepository;
+
+    private Optional<Coach> getTeamCoach(String coach_id) {
+        return coachRepository.findById(coach_id);
+    }
 
     @GetMapping
     public ResponseEntity getAllTeam(){
-        var allTeams = repository.findAll();
-        return ResponseEntity.ok(allTeams);
+        List<TeamSummaryDTO> teams = repository.findAll()
+            .stream()
+            .map(TeamConverter::convertToBasicDTO)
+            .toList();
+        return ResponseEntity.ok(teams);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity getTeam(@PathVariable String id){
-        Optional<Team> optionalTeam = repository.findById(id);
-
-        if(optionalTeam.isEmpty()){
-            throw new EntityNotFoundException();
-        }
-
-        return ResponseEntity.ok(optionalTeam.get());
+        Team team = repository.findById(id).orElseThrow(EntityNotFoundException::new);
+        TeamDetailsDTO teamDTO = TeamConverter.convertToFullDTO(team);
+        return ResponseEntity.ok(teamDTO);
     }
 
     @PostMapping
     public ResponseEntity registerTeam(@RequestBody @Valid RequestTeam data){
-        Team newTeam = new Team(data);
+        var coach = getTeamCoach(data.coach_id());
+        Team newTeam = coach.map(value -> new Team(data, value)).orElseGet(() -> new Team(data, null));
+
         repository.save(newTeam);
         return ResponseEntity.ok("Team created successfully");
     }
