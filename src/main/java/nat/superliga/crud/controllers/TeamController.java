@@ -1,5 +1,6 @@
 package nat.superliga.crud.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import nat.superliga.crud.domain.Coach.Coach;
@@ -29,6 +30,7 @@ public class TeamController {
     }
 
     @GetMapping
+    @Operation(summary = "get all teams", description = "Return a list of all registered teams.")
     public ResponseEntity getAllTeam(){
         List<TeamSummaryDTO> teams = repository.findAll()
             .stream()
@@ -38,6 +40,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
+    @Operation(summary = "get a team", description = "Returns a team based on the provided ID.")
     public ResponseEntity getTeam(@PathVariable String id){
         Team team = repository.findById(id).orElseThrow(EntityNotFoundException::new);
         TeamDetailsDTO teamDTO = TeamConverter.convertToFullDTO(team);
@@ -45,6 +48,7 @@ public class TeamController {
     }
 
     @PostMapping
+    @Operation(summary = "add a team", description = "Return a success message when the team is successfully created.")
     public ResponseEntity registerTeam(@RequestBody @Valid RequestTeam data){
         var coach = getTeamCoach(data.coach_id());
         Team newTeam = coach.map(value -> new Team(data, value)).orElseGet(() -> new Team(data, null));
@@ -55,6 +59,7 @@ public class TeamController {
 
     @PutMapping
     @Transactional
+    @Operation(summary = "update a team", description = "Returns a success message when the team is successfully updated.")
     public ResponseEntity updateTeam(@RequestBody @Valid RequestTeam data){
         Optional<Team> optionalTeam = repository.findById(data.id());
 
@@ -72,7 +77,8 @@ public class TeamController {
 
     @DeleteMapping("/{id}")
     @Transactional
-    public ResponseEntity deleteCoach(@PathVariable String id){
+    @Operation(summary = "delete a team", description = "Return a success message when the team is successfully deleted.")
+    public ResponseEntity deleteTeam(@PathVariable String id){
         Optional<Team> optionalTeam = repository.findById(id);
 
         if(optionalTeam.isEmpty()){
