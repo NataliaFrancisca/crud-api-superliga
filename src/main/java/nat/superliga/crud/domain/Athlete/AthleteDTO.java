@@ -14,6 +14,6 @@ public class AthleteDTO {
     private Double height;
     private LocalDate birthdate;
     private String nationality;
-    private String teamId;
+    private String team_id;
     private String photo;
 }

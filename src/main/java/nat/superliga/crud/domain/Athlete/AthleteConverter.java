@@ -13,7 +13,7 @@ public class AthleteConverter {
         dto.setPhoto(athlete.getPhoto());
 
         if (athlete.getTeam() != null) {
-            dto.setTeamId(athlete.getTeam().getId());  // Atribui o ID do time ao DTO
+            dto.setTeam_id(athlete.getTeam().getId());  // Atribui o ID do time ao DTO
         }
 
         return dto;
