@@ -50,10 +50,16 @@ public class TeamController {
     @PostMapping
     @Operation(summary = "add a team", description = "Return a success message when the team is successfully created.")
     public ResponseEntity registerTeam(@RequestBody @Valid RequestTeam data){
-        var coach = getTeamCoach(data.coach_id());
-        Team newTeam = coach.map(value -> new Team(data, value)).orElseGet(() -> new Team(data, null));
 
-        repository.save(newTeam);
+        if(data.coach_id() == null){
+            Team newTeam = new Team(data, null);
+            repository.save(newTeam);
+        }else{
+            var coach = getTeamCoach(data.coach_id());
+            Team newTeam = coach.map(value -> new Team(data, value)).orElseGet(() -> new Team(data, null));
+            repository.save(newTeam);
+        }
+
         return ResponseEntity.ok("Team created successfully");
     }
 
