@@ -6,6 +6,7 @@ import nat.superliga.crud.domain.Athlete.*;
 import nat.superliga.crud.domain.Team.Team;
 import nat.superliga.crud.domain.Team.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class AthleteController {
         Optional<Athlete> optionalAthlete = repository.findById(id);
 
         if(optionalAthlete.isEmpty()){
-            throw new EntityNotFoundException();
+            throw new EntityNotFoundException("Athlete not found");
         }
 
         Optional<AthleteDTO> athleteDTO = optionalAthlete.map(AthleteConverter::convertToDTO);
@@ -51,7 +52,7 @@ public class AthleteController {
         Athlete newAthlete = team.map(value -> new Athlete(data, value)).orElseGet(() -> new Athlete(data, null));
 
         repository.save(newAthlete);
-        return ResponseEntity.ok("Athlete created successfully!");
+        return ResponseEntity.status(HttpStatus.CREATED).body("Athlete created successfully!");
     }
 
     @PutMapping
@@ -70,6 +71,7 @@ public class AthleteController {
         athlete.setPosition(data.position());
         athlete.setHeight(data.height());
         athlete.setNationality(data.nationality());
+        athlete.setPhoto(data.photo());
 
         var team = getAthleteTeam(data.team_id());
 
@@ -92,6 +94,6 @@ public class AthleteController {
         }
 
         repository.delete(athleteOptional.get());
-        return ResponseEntity.ok("Athlete deleted successfully");
+        return ResponseEntity.noContent().build();
     }
 }
