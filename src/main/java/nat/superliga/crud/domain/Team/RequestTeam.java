@@ -6,7 +6,6 @@ public record RequestTeam(
         String id,
         @NotBlank
         String name,
-        @NotBlank
         String coach_id,
         @NotBlank
         String state
